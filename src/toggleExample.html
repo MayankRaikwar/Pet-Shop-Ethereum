@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="adopt">
+<button onclick="toggle()">Adopt</button>
+</div>
+
+<div id="release" style="display:none;">
+<button onclick="toggle()">Release</button>
+</div>
+
+
+<script>
+function toggle() {
+    var adopt = document.getElementById("adopt");
+    var release = document.getElementById("release");
+    
+    if (release.style.display === "none") {
+        release.style.display = "block";
+        adopt.style.display = "none";
+    } else {
+        release.style.display = "none";
+        adopt.style.display = "block";
+    }
+}
+</script>
+
+</body>
+</html>
