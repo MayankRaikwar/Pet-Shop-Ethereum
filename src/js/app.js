@@ -15,6 +15,7 @@ App = {
         petTemplate.find('.pet-age').text(data[i].age);
         petTemplate.find('.pet-location').text(data[i].location);
         petTemplate.find('.btn-adopt').attr('data-id', data[i].id);
+        petTemplate.find('.btn-release').attr('data-id', data[i].id);
 
         petsRow.append(petTemplate.html());
       }
@@ -54,6 +55,7 @@ App = {
 
   bindEvents: function() {
     $(document).on('click', '.btn-adopt', App.handleAdopt);
+    $(document).on('click', '.btn-release', App.handleRelease);
   },
 
   markAdopted: function(adopters, account) {
@@ -69,6 +71,10 @@ App = {
           $('.panel-pet').eq(i).find('.btn-adopt').hide();//text('Success').attr('disabled', true);
           $('.panel-pet').eq(i).find('.btn-release').show();
           $('.panel-pet').eq(i).find('.pet-adopter').text(adopters[i].substring(0,16));
+        } else {
+          $('.panel-pet').eq(i).find('.btn-adopt').show();
+          $('.panel-pet').eq(i).find('.btn-release').hide();
+          $('.panel-pet').eq(i).find('.pet-adopter').text('NULL');
         }
       }
     }).catch(function(err) {
@@ -95,6 +101,33 @@ App = {
 
         // Execute adopt as a transaction by sending account
         return adoptionInstance.adopt(petId, {from: account});
+      }).then(function(result) {
+        return App.markAdopted();
+      }).catch(function(err) {
+        console.log(err.message);
+      });
+    });
+  },
+
+  handleRelease: function(event) {
+    event.preventDefault();
+
+    var petId = parseInt($(event.target).data('id'));
+
+    var releasingInstance;
+
+    web3.eth.getAccounts(function(error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+
+      var account = accounts[0];
+
+      App.contracts.Adoption.deployed().then(function(instance) {
+        releasingInstance = instance;
+
+        // Execute adopt as a transaction by sending account
+        return releasingInstance.release(petId, {from: account});
       }).then(function(result) {
         return App.markAdopted();
       }).catch(function(err) {
