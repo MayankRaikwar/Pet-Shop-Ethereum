@@ -66,8 +66,9 @@ App = {
     }).then(function(adopters) {
       for (i = 0; i < adopters.length; i++) {
         if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
-          $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
-          $('.panel-pet').eq(i).find('.pet-adopter').text(adopters[i]);
+          $('.panel-pet').eq(i).find('.btn-adopt').hide();//text('Success').attr('disabled', true);
+          $('.panel-pet').eq(i).find('.btn-release').show();
+          $('.panel-pet').eq(i).find('.pet-adopter').text(adopters[i].substring(0,16));
         }
       }
     }).catch(function(err) {
